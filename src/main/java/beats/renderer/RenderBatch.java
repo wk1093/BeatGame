@@ -2,8 +2,14 @@ package beats.renderer;
 
 import beats.Window;
 import beats.ecs.components.SpriteRenderer;
+import beats.util.AssetPool;
 import beats.util.VertexAttribBuilder;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -14,24 +20,26 @@ public class RenderBatch {
     private int numSprites;
     private boolean hasRoom;
     private float[] vertices;
+    private int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
+    private List<Texture> textures;
     private int vaoID, vboID;
     private int maxBatchSize;
     private Shader shader;
 
     public RenderBatch(int maxBatchSize) {
-        shader = new Shader("assets/shaders/default.glsl");
-        shader.compile();
+        shader = AssetPool.getShader("assets/shaders/default.glsl");
 
-        // POS: float float, COLOR: float float float float
-        vertexAttribBuilder = new VertexAttribBuilder(2, 4);
+        // POS: float float, COLOR: float float float float, TEX: float float, TEX ID: float
+        vertexAttribBuilder = new VertexAttribBuilder(2, 4, 2, 1);
 
         this.sprites = new SpriteRenderer[maxBatchSize];
         this.maxBatchSize = maxBatchSize;
         this.numSprites = 0;
         this.hasRoom = true;
-
         vertices = new float[maxBatchSize * 4 * vertexAttribBuilder.getSize()];
+
+        textures = new ArrayList<>();
     }
 
     public void start() {
@@ -56,6 +64,11 @@ public class RenderBatch {
         int index = numSprites;
         sprites[index] = spr;
         numSprites++;
+        if (spr.getTexture() != null) {
+            if (!textures.contains(spr.getTexture())) {
+                textures.add(spr.getTexture());
+            }
+        }
 
         loadVertexProperties(index);
 
@@ -71,12 +84,23 @@ public class RenderBatch {
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Window.getScene().camera().getViewMatrix());
+        shader.uploadIntArray("uTextures", texSlots);
+        for (int i = 0; i < textures.size(); i++) {
+            glActiveTexture(GL_TEXTURE0 + i + 1);
+            textures.get(i).bind();
+        }
 
         glBindVertexArray(vaoID);
         vertexAttribBuilder.enable();
         glDrawElements(GL_TRIANGLES, numSprites * 6, GL_UNSIGNED_INT, 0);
         vertexAttribBuilder.disable();
         glBindVertexArray(0);
+
+        for (int i = 0; i < textures.size(); i++) {
+            textures.get(i).unbind();
+        }
+
+        shader.detach();
 
     }
 
@@ -86,6 +110,21 @@ public class RenderBatch {
         int off = index * 4 * vertexAttribBuilder.getSize();
 
         Vector4f color = sprite.getColor();
+
+        Vector2f[] texCoords = sprite.getTexCoords();
+
+        int texId = 0;
+        if (sprite.getTexture() != null) {
+            for (int i = 0; i < textures.size(); i++) {
+                if (textures.get(i).equals(sprite.getTexture())) {
+                    texId = i+1;
+                    break;
+                }
+            }
+        }
+        System.out.println(texId);
+
+
         float xAdd = 1.0f;
         float yAdd = 1.0f;
         for (int i = 0;i < 4; i++) {
@@ -104,6 +143,11 @@ public class RenderBatch {
             vertices[off+3] = color.y;
             vertices[off+4] = color.z;
             vertices[off+5] = color.w;
+
+            vertices[off+6] = texCoords[i].x;
+            vertices[off+7] = texCoords[i].y;
+
+            vertices[off+8] = texId;
 
             off += vertexAttribBuilder.getSize();
         }

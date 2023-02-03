@@ -30,9 +30,9 @@ public class Window implements Loggable {
         this.width = 1280;
         this.height = 720;
         this.title = "BeatGame";
-        this.clearR = 1.0f;
-        this.clearG = 1.0f;
-        this.clearB = 1.0f;
+        this.clearR = 0.0f;
+        this.clearG = 0.0f;
+        this.clearB = 0.0f;
         this.clearA = 1.0f;
     }
 

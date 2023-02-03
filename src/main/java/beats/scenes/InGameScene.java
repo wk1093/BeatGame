@@ -5,6 +5,7 @@ import beats.ecs.GameObject;
 import beats.ecs.Transform;
 import beats.ecs.components.SpriteRenderer;
 import beats.renderer.Camera;
+import beats.util.AssetPool;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -19,24 +20,20 @@ public class InGameScene extends Scene {
     @Override
     public void init() {
         this.camera = new Camera(new Vector2f());
-        int xOffset = 10;
-        int yOffset = 10;
 
-        float totalWidth = (float)(600 - xOffset * 2);
-        float totalHeight = (float)(600 - yOffset * 2);
-        float sizeX = totalWidth / 100.0f;
-        float sizeY = totalHeight / 100.0f;
+        GameObject obj1 = new GameObject("obj1", new Transform(new Vector2f(100, 100), new Vector2f(200, 200)));
+        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/test.jpg")));
+        this.gameObjects.add(obj1);
 
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
-                float xPos = xOffset + (i * sizeX);
-                float yPos = yOffset + (j * sizeY);
+        GameObject obj2 = new GameObject("obj2", new Transform(new Vector2f(300, 300), new Vector2f(200, 200)));
+        obj2.addComponent(new SpriteRenderer(new Vector4f(1, 0, 0, 1)));
+        this.gameObjects.add(obj2);
 
-                GameObject go = new GameObject("Obj"+i+"_"+j, new Transform(new Vector2f(xPos, yPos), new Vector2f(sizeX, sizeY)));
-                go.addComponent(new SpriteRenderer(new Vector4f(xPos / totalWidth, yPos / totalHeight, 1, 1)));
-                this.addGameObjectToScene(go);
-            }
-        }
+        loadResources();
+    }
+
+    private void loadResources() {
+        AssetPool.getShader("assets/shaders/default.glsl");
     }
 
 
