@@ -33,7 +33,6 @@ public class GameObject implements Loggable {
                 }
             }
         }
-        LOGGER.warning("Tried to get component " + componentClass.getName() + " from GameObject " + name + " but it does not have that component (use hasComponent() to check)");
         return null;
     }
 
@@ -53,7 +52,6 @@ public class GameObject implements Loggable {
                 return;
             }
         }
-        LOGGER.warning("Tried to remove component " + component.getName() + " from GameObject " + name + " but it does not have that component (use hasComponent() to check)");
     }
 
     public void addComponent(Component c) {

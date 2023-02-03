@@ -2,12 +2,15 @@ package beats;
 
 import beats.ecs.GameObject;
 import beats.renderer.Camera;
+import beats.renderer.Renderer;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Scene {
+
+    protected Renderer renderer = new Renderer();
 
     protected Camera camera;
     private boolean isRunning = false;
@@ -23,6 +26,7 @@ public abstract class Scene {
     public void start() {
         for (GameObject go : gameObjects) {
             go.start();
+            this.renderer.add(go);
         }
         isRunning = true;
     }
@@ -31,6 +35,7 @@ public abstract class Scene {
         gameObjects.add(go);
         if (isRunning) {
             go.start();
+            this.renderer.add(go);
         }
     }
 

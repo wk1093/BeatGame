@@ -35,6 +35,14 @@ public class VertexAttribBuilder { // a class to build vertex attribute pointers
         }
     }
 
+    public int getSize() { // amount of floats per vertex
+        int size = 0;
+        for (int i = 0; i < attribs.length; i++) {
+            size += attribs[i];
+        }
+        return size;
+    }
+
 
 
 
