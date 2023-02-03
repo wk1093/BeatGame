@@ -4,7 +4,6 @@ import beats.Scene;
 import beats.ecs.GameObject;
 import beats.ecs.Transform;
 import beats.ecs.components.SpriteRenderer;
-import beats.game.BeatObject;
 import beats.game.BeatType;
 import beats.renderer.Camera;
 import beats.util.AssetPool;
@@ -23,15 +22,13 @@ public class InGameScene extends Scene {
     public void init() {
         this.camera = new Camera(new Vector2f());
 
-//        GameObject obj1 = new GameObject("obj1", new Transform(new Vector2f(100, 100), new Vector2f(200, 200)));
-//        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/test.jpg")));
-//        this.gameObjects.add(obj1);
-//
-//        GameObject obj2 = new GameObject("obj2", new Transform(new Vector2f(300, 300), new Vector2f(200, 200)));
-//        obj2.addComponent(new SpriteRenderer(new Vector4f(1, 0, 0, 1)));
-//        this.gameObjects.add(obj2);
-        BeatObject bo = new BeatObject("beat", new Transform(new Vector2f(100, 100), new Vector2f(50, 50)), BeatType.up, 0);
-        this.gameObjects.add(bo);
+        GameObject obj1 = new GameObject("obj1", new Transform(new Vector2f(100, 100), new Vector2f(200, 200)));
+        obj1.addComponent(new SpriteRenderer(AssetPool.getTexture("assets/images/test.jpg")));
+        this.gameObjects.add(obj1);
+
+        GameObject obj2 = new GameObject("obj2", new Transform(new Vector2f(300, 300), new Vector2f(200, 200)));
+        obj2.addComponent(new SpriteRenderer(new Vector4f(1, 0, 0, 1)));
+        this.gameObjects.add(obj2);
 
 
         loadResources();
