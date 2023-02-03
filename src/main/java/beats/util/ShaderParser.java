@@ -2,7 +2,6 @@ package beats.util;
 
 import beats.Loggable;
 
-import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
 public class ShaderParser implements Loggable {

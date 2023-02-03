@@ -5,8 +5,6 @@ import beats.renderer.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import java.util.Vector;
-
 public class SpriteRenderer extends Component {
 
     Vector4f color;

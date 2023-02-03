@@ -1,5 +1,4 @@
 import beats.Window;
-import beats.game.BeatGameLevel;
 
 public class Main {
     public static void main(String[] args) {

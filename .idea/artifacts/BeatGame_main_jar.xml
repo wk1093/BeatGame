@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/BeatGame_main_jar</output-path>
     <root id="archive" name="BeatGame.main.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="BeatGame.main" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.3/40eccaa4fa86fc815f2e17946a392fb5fdcc286a/lwjgl-stb-3.2.3.jar" path-in-jar="/" />

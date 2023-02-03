@@ -3,13 +3,7 @@ package beats.game;
 import beats.util.FileUtils;
 import org.joml.Vector2f;
 import org.json.*;
-import org.lwjgl.system.CallbackI;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 public class BeatGameLevel {
