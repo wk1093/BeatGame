@@ -18,7 +18,9 @@ public class Renderer {
         SpriteRenderer spr = go.getComponent(SpriteRenderer.class);
         if (spr != null) {
             add(spr);
+            return;
         }
+
     }
 
     private void add(SpriteRenderer sprite) {
