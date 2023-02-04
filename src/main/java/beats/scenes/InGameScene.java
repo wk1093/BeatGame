@@ -62,7 +62,7 @@ public class InGameScene extends Scene {
     }
 
     private double time() {
-        return Time.getTime() - startTime - 3 - level.getOffsetms()/1000.0;
+        return Time.getTime() - startTime - 3;
     }
 
     public void update(float dt) {
@@ -108,7 +108,8 @@ public class InGameScene extends Scene {
 
     }
 
-    private final static float BEAT_SIZE = 40.0f;
+    private final static float BEAT_SIZE = 50.0f;
+    private final static float BEAT_OFFSET = 5.0f;
     private float health = 100.0f;
 
     public void gameLoop(float dt) {
@@ -116,11 +117,10 @@ public class InGameScene extends Scene {
         health -= dt * 10.0f;
         for (JsonBeat beat : level.getBeatmap()) {
             if (beat.getTimems() - beat.getReactionms()/2.0f <= time()*1000 && !beat.started) { // show beat
-                System.out.println("Starting beat at " + beat.getTimems() + "ms");
                 beat.started = true;
                 if (beat.getType() != BeatType.set) {
                     Vector2f centerpos = fromBeatCoord(beat.getPos().x, beat.getPos().y);
-                    beat.obj = new GameObject("Beat", new Transform(new Vector2f(centerpos.x - BEAT_SIZE/2.0f, centerpos.y - BEAT_SIZE/2.0f), new Vector2f(BEAT_SIZE, BEAT_SIZE)), 0);
+                    beat.obj = new GameObject("Beat", new Transform(new Vector2f(centerpos.x - (BEAT_SIZE-BEAT_OFFSET)/2.0f, centerpos.y - (BEAT_SIZE-BEAT_OFFSET)/2.0f), new Vector2f((BEAT_SIZE-BEAT_OFFSET), (BEAT_SIZE-BEAT_OFFSET))), 0);
                     beat.obj.addComponent(new SpriteRenderer(sprites.getSprite(beat.getType().ordinal())));
                     addGameObjectToScene(beat.obj);
                     beat.circle = new GameObject("Circle", new Transform(new Vector2f(centerpos.x - BEAT_SIZE, centerpos.y - BEAT_SIZE), new Vector2f(BEAT_SIZE*2, BEAT_SIZE*2)), 0);
@@ -177,7 +177,9 @@ public class InGameScene extends Scene {
                     if (dist <= BEAT_SIZE / 2.0f) {
                         // the mouse is inside the circle
                         beat.played = true;
-                        beat.obj.getComponent(SpriteRenderer.class).setColor(new Vector4f(0.2f, 1.0f, 0.2f, 1.0f));
+                        removeGameObjectFromScene(beat.obj);
+                        removeGameObjectFromScene(beat.circle);
+                        removeGameObjectFromScene(beat.outline);
                         // the heath is increased, if thew circle is smaller you get more health
                         // circle_size = 1.0f -> 10.0f
                         // circle_size = 2.0f -> 1.0f
@@ -187,9 +189,7 @@ public class InGameScene extends Scene {
                             if (health > 100.0f) {
                                 health = 100.0f;
                             }
-                            System.out.println("EARLY");
                         } else {
-                            System.out.println("LATE");
                             float diff = 1.0f - circle_size;
                             if (Math.abs(diff) < 0.2f) {
                                 health += 10.0f;
@@ -208,7 +208,7 @@ public class InGameScene extends Scene {
             }
 
         }
-        if (getProgress() >= 1.3f) {
+        if (getProgress() >= 1f || health <= 0.0f) {
             System.out.println("Game finished");
             started_game = false;
             Window.changeScene(1);

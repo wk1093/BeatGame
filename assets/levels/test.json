@@ -3,16 +3,28 @@
   "composer": "Test Music Artist",
   "author": "Test Beatmap Author",
   "difficulty": 1,
-  "offsetms": 0.0,
-  "length": 4000.0,
-  "bpm": 120,
+  "length": 10000.0,
   "beatmap": [
     {
-      "time": 2000.0,
-      "type": "up",
+      "type": "click",
+      "time": 1917.0,
       "x": 250,
       "y": 250,
-      "reaction": 1000.0
+      "reaction": 700.0
+    },
+    {
+      "type": "left",
+      "time": 5621.0,
+      "x": 200,
+      "y": 250,
+      "reaction": 1500.0
+    },
+    {
+      "type": "right",
+      "time": 6515.0,
+      "x": 300,
+      "y": 250,
+      "reaction": 1500.0
     }
   ]
 }

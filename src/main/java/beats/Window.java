@@ -14,6 +14,11 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.openal.ALC10.*;
@@ -21,9 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window implements Loggable {
-    public static String[] levels = {
-            "test"
-    };
+    public static String[] levels;
     private int width, height;
     private String title;
     private long glfwWindow;
@@ -48,6 +51,18 @@ public class Window implements Loggable {
         this.clearG = 0.05f;
         this.clearB = 0.07f;
         this.clearA = 1.0f;
+
+        List<String> lvlList = new ArrayList<>();
+        File folder = new File("assets/levels");
+        File[] listOfFiles = folder.listFiles();
+        assert listOfFiles != null;
+        for (File file : listOfFiles) {
+            if (file.isFile() && file.getName().endsWith(".json")) {
+                lvlList.add(file.getName().replace(".json", ""));
+            }
+        }
+        levels = lvlList.toArray(new String[0]);
+        System.out.println(Arrays.toString(levels));
     }
 
     public static void changeScene(int newScene) {

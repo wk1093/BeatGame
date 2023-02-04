@@ -53,9 +53,13 @@ public class Renderer {
         }
     }
 
-    public void remove(GameObject countdown) {
+    public void remove(GameObject obj) {
+        int index = obj.zIndex();
         for (RenderBatch batch : batches) {
-            batch.remove(countdown);
+            if (batch.zIndex() == index) {
+                batch.remove(obj);
+                break;
+            }
         }
     }
 }

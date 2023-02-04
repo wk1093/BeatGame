@@ -16,9 +16,6 @@ public class JsonBeat {
     public GameObject circle;
     public GameObject outline;
 
-    // set
-    private double bpm;
-
     public boolean started = false;
     public boolean finished = false;
     public boolean played = false;
@@ -56,14 +53,6 @@ public class JsonBeat {
         this.reactionms = reactionms;
     }
 
-    public double getBpm() {
-        return bpm;
-    }
-
-    public void setBpm(double bpm) {
-        this.bpm = bpm;
-    }
-
     public JsonBeat(JSONObject json) {
         switch (json.getString("type")) {
             case "up":
@@ -89,16 +78,14 @@ public class JsonBeat {
         }
 
         timems = json.getDouble("time");
-        if (type == BeatType.set) {
-            bpm = json.getDouble("bpm");
-        } else {
+        if (type != BeatType.set) {
             double x = json.getDouble("x");
             double y = json.getDouble("y");
             pos = new Vector2f((float) x, (float) y);
             try {
                 reactionms = json.getDouble("reaction");
             } catch (JSONException e) {
-                reactionms = 0.5;
+                reactionms = 500;
             }
         }
     }
