@@ -1,11 +1,10 @@
 {
   "name": "A Test Level",
-  "song": "Test.mp3",
   "composer": "Test Music Artist",
   "author": "Test Beatmap Author",
   "difficulty": 1,
   "offsetms": 0.0,
-  "length": 0.0,
+  "length": 4000.0,
   "bpm": 120,
   "beatmap": [
     {
@@ -13,12 +12,7 @@
       "type": "up",
       "x": 250,
       "y": 250,
-      "reaction": 2000.0
-    },
-    {
-      "time": 0.123,
-      "type": "set",
-      "bpm": 124
+      "reaction": 1000.0
     }
   ]
 }

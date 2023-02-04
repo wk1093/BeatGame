@@ -14,6 +14,7 @@ public class JsonBeat {
 
     public GameObject obj;
     public GameObject circle;
+    public GameObject outline;
 
     // set
     private double bpm;

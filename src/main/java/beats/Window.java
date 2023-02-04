@@ -8,10 +8,15 @@ import beats.scenes.MainMenuScene;
 import beats.util.Time;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.ALCapabilities;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -27,6 +32,9 @@ public class Window implements Loggable {
     public static String level = "";
 
     private static Window window = null;
+
+    private long audioContext;
+    private long audioDevice;
 
     private static Scene currentScene;
 
@@ -79,6 +87,10 @@ public class Window implements Loggable {
         init();
         loop();
 
+        alcDestroyContext(audioContext);
+        alcCloseDevice(audioDevice);
+
+
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
@@ -116,13 +128,26 @@ public class Window implements Loggable {
 
         glfwShowWindow(glfwWindow);
 
-        GL.createCapabilities();
+        String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+        audioDevice = alcOpenDevice(defaultDeviceName);
 
-        imguiLayer = new ImGuiLayer(glfwWindow);
-        imguiLayer.initImGui();
+        int[] attributes = {0};
+        audioContext = alcCreateContext(audioDevice, attributes);
+        alcMakeContextCurrent(audioContext);
+
+        ALCCapabilities alcCapabilities = ALC.createCapabilities(audioDevice);
+        ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
+        if (!alCapabilities.OpenAL10) {
+            throw new IllegalStateException("OpenAL 1.0 not supported!");
+        }
+
+        GL.createCapabilities();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        imguiLayer = new ImGuiLayer(glfwWindow);
+        imguiLayer.initImGui();
 
         Window.changeScene(0); // TODO: Set to 0
     }

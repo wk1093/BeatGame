@@ -1,5 +1,10 @@
 package beats.game;
 
+import beats.input.KeyListener;
+import beats.input.MouseListener;
+
+import static org.lwjgl.glfw.GLFW.*;
+
 public enum BeatType {
     up(0, "up"),
     left(1, "left"),
@@ -33,5 +38,23 @@ public enum BeatType {
             if (t.id == id) return t;
         }
         return null;
+    }
+
+    public boolean pressed() {
+        switch (this) {
+            case up:
+                return KeyListener.isKeyPressed(GLFW_KEY_W) || KeyListener.isKeyPressed(GLFW_KEY_UP);
+            case down:
+                return KeyListener.isKeyPressed(GLFW_KEY_S) || KeyListener.isKeyPressed(GLFW_KEY_DOWN);
+            case left:
+                return KeyListener.isKeyPressed(GLFW_KEY_A) || KeyListener.isKeyPressed(GLFW_KEY_LEFT);
+            case right:
+                return KeyListener.isKeyPressed(GLFW_KEY_D) || KeyListener.isKeyPressed(GLFW_KEY_RIGHT);
+            case click:
+                return MouseListener.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
+            default:
+
+                return false;
+        }
     }
 }

@@ -1,6 +1,8 @@
 package beats.game;
 
+import beats.Sound;
 import beats.ecs.GameObject;
+import beats.util.AssetPool;
 import beats.util.FileUtils;
 import org.joml.Vector2f;
 import org.json.*;
@@ -11,16 +13,11 @@ import java.util.Vector;
 
 public class BeatGameLevel {
     private String name;
-    private String song;
     private String composer;
     private String author;
 
     public String getName() {
         return name;
-    }
-
-    public String getSong() {
-        return song;
     }
 
     public String getComposer() {
@@ -69,12 +66,11 @@ public class BeatGameLevel {
         JSONObject obj = new JSONObject(f);
 
         name = obj.getString("name");
-        song = obj.getString("song");
         try { composer = obj.getString("composer"); } catch (JSONException e) { composer = "Unknown"; }
         try { author = obj.getString("author"); } catch (JSONException e) { author = "Unknown"; }
         difficulty = obj.getInt("difficulty");
         try { offsetms = obj.getDouble("offsetms"); } catch (JSONException e) { offsetms = 0.0; }
-        try { length = obj.getDouble("length"); } catch (JSONException e) { length = 0.0; }
+        length = obj.getDouble("length");
         try { bpm = obj.getDouble("bpm"); } catch (JSONException e) { bpm = 0.0; noBPM = true; }
         JSONArray map = obj.getJSONArray("beatmap");
         beatmap = new Vector<JsonBeat>();
@@ -83,7 +79,6 @@ public class BeatGameLevel {
             beatmap.add(new JsonBeat(o));
         }
         System.out.println("Level '"+name+"':");
-        System.out.println("\tsong: '"+song+"'");
         System.out.println("\tcomposer: '"+composer+"'");
         System.out.println("\tauthor: '"+author+"'");
         System.out.println("\tdifficulty: "+difficulty);
