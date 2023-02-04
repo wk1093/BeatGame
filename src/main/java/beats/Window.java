@@ -19,6 +19,7 @@ public class Window implements Loggable {
     private int width, height;
     private String title;
     private long glfwWindow;
+    private ImGuiLayer imguiLayer;
 
     private static Window window = null;
 
@@ -100,6 +101,10 @@ public class Window implements Loggable {
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
         glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (window, newWidth, newHeight) -> {
+            Window.setWidth(newWidth);
+            Window.setHeight(newHeight);
+        });
 
         glfwMakeContextCurrent(glfwWindow);
         glfwSwapInterval(1);
@@ -110,6 +115,9 @@ public class Window implements Loggable {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        imguiLayer = new ImGuiLayer(glfwWindow);
+        imguiLayer.initImGui();
 
         Window.changeScene(2); // TODO: Set to 0
     }
@@ -131,6 +139,7 @@ public class Window implements Loggable {
             if (dt >= 0)
                 currentScene.update(dt);
 
+            imguiLayer.update(dt);
             glfwSwapBuffers(glfwWindow);
             endTime = Time.getTime();
             dt = endTime - beginTime;
@@ -168,5 +177,21 @@ public class Window implements Loggable {
 
     public void setA(float clearA) {
         this.clearA = clearA;
+    }
+
+    public static int getWidth() {
+        return get().width;
+    }
+
+    public static int getHeight() {
+        return get().height;
+    }
+
+    public static void setWidth(int width) {
+        get().width = width;
+    }
+
+    public static void setHeight(int height) {
+        get().height = height;
     }
 }
