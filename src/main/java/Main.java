@@ -9,4 +9,4 @@ public class Main {
 }
 
 
-// https://youtu.be/025QFeZfeyM?t=23002
+// https://youtu.be/025QFeZfeyM?t=23940

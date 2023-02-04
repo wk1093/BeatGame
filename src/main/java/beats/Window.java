@@ -30,9 +30,9 @@ public class Window implements Loggable {
         this.width = 1280;
         this.height = 720;
         this.title = "BeatGame";
-        this.clearR = 0.0f;
-        this.clearG = 0.0f;
-        this.clearB = 0.0f;
+        this.clearR = 0.7f;
+        this.clearG = 0.2f;
+        this.clearB = 0.2f;
         this.clearA = 1.0f;
     }
 
@@ -107,6 +107,9 @@ public class Window implements Loggable {
         glfwShowWindow(glfwWindow);
 
         GL.createCapabilities();
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         Window.changeScene(2); // TODO: Set to 0
     }
