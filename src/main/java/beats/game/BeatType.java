@@ -2,9 +2,9 @@ package beats.game;
 
 public enum BeatType {
     up(0, "up"),
-    down(1, "down"),
-    left(2, "left"),
-    right(3, "right"),
+    left(1, "left"),
+    right(2, "right"),
+    down(3, "down"),
     click(4, "click"),
     set(5, "set");
 

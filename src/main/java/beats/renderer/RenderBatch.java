@@ -1,6 +1,7 @@
 package beats.renderer;
 
 import beats.Window;
+import beats.ecs.GameObject;
 import beats.ecs.components.SpriteRenderer;
 import beats.util.AssetPool;
 import beats.util.VertexAttribBuilder;
@@ -205,5 +206,16 @@ public class RenderBatch implements Comparable<RenderBatch> {
     @Override
     public int compareTo(RenderBatch o) {
         return Integer.compare(this.zIndex, o.zIndex());
+    }
+
+    public void remove(GameObject countdown) {
+        for (int i = 0; i < numSprites; i++) {
+            if (sprites[i].gameObject.equals(countdown)) {
+                sprites[i] = sprites[numSprites-1];
+                sprites[numSprites-1] = null;
+                numSprites--;
+                break;
+            }
+        }
     }
 }

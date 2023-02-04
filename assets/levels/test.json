@@ -9,11 +9,11 @@
   "bpm": 120,
   "beatmap": [
     {
-      "time": 0.25,
+      "time": 2000.0,
       "type": "up",
       "x": 250,
       "y": 250,
-      "reaction": 0.2
+      "reaction": 2000.0
     },
     {
       "time": 0.123,

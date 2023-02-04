@@ -16,10 +16,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window implements Loggable {
+    public static String[] levels = {
+            "test"
+    };
     private int width, height;
     private String title;
     private long glfwWindow;
     private ImGuiLayer imguiLayer;
+
+    public static String level = "";
 
     private static Window window = null;
 
@@ -31,9 +36,9 @@ public class Window implements Loggable {
         this.width = 1280;
         this.height = 720;
         this.title = "BeatGame";
-        this.clearR = 0.7f;
-        this.clearG = 0.2f;
-        this.clearB = 0.2f;
+        this.clearR = 0.06f;
+        this.clearG = 0.05f;
+        this.clearB = 0.07f;
         this.clearA = 1.0f;
     }
 
@@ -113,13 +118,13 @@ public class Window implements Loggable {
 
         GL.createCapabilities();
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
         imguiLayer = new ImGuiLayer(glfwWindow);
         imguiLayer.initImGui();
 
-        Window.changeScene(2); // TODO: Set to 0
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        Window.changeScene(0); // TODO: Set to 0
     }
 
     public void loop() {
@@ -139,7 +144,7 @@ public class Window implements Loggable {
             if (dt >= 0)
                 currentScene.update(dt);
 
-            imguiLayer.update(dt);
+            imguiLayer.update(dt, currentScene);
             glfwSwapBuffers(glfwWindow);
             endTime = Time.getTime();
             dt = endTime - beginTime;
@@ -147,36 +152,11 @@ public class Window implements Loggable {
         }
     }
 
-    public float getR() {
-        return clearR;
-    }
-
-    public void setR(float clearR) {
-        this.clearR = clearR;
-    }
-
-    public float getG() {
-        return clearG;
-    }
-
-    public void setG(float clearG) {
-        this.clearG = clearG;
-    }
-
-    public float getB() {
-        return clearB;
-    }
-
-    public void setB(float clearB) {
-        this.clearB = clearB;
-    }
-
-    public float getA() {
-        return clearA;
-    }
-
-    public void setA(float clearA) {
-        this.clearA = clearA;
+    public static void setClearColor(float r, float g, float b, float a) {
+        get().clearR = r;
+        get().clearG = g;
+        get().clearB = b;
+        get().clearA = a;
     }
 
     public static int getWidth() {
@@ -194,4 +174,9 @@ public class Window implements Loggable {
     public static void setHeight(int height) {
         get().height = height;
     }
+
+    public static void exit() {
+        glfwSetWindowShouldClose(get().glfwWindow, true);
+    }
+
 }

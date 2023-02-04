@@ -16,6 +16,60 @@ public class ImGuiLayer {
         this.glfwWindow = glfwWindow;
     }
 
+    public static void beginFullscreen(String menu) {
+        ImGui.setNextWindowPos(0, 0);
+        ImGui.setNextWindowSize(Window.getWidth(), Window.getHeight());
+        ImGui.begin(menu, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoBringToFrontOnFocus);
+    }
+
+    public static boolean CenteredButton(String text, float yOff) { // only for fullscreen windows
+        // do the same as ImGui::Button but center it
+        float windowWidth = Window.getWidth();
+        ImVec2 dst = new ImVec2();
+        ImGui.calcTextSize(dst, text);
+        ImVec2 dst2 = new ImVec2();
+        ImGui.getStyle().getFramePadding(dst2);
+        float buttonWidth = dst.x + dst2.x * 2;
+        float buttonX = (windowWidth - buttonWidth) / 2;
+        // center x and y, then add yOff
+        ImVec2 oldPos = new ImVec2();
+        ImGui.getCursorPos(oldPos);
+        ImGui.setCursorPos(buttonX, Window.getHeight() / 2.0f + yOff);
+        boolean result = ImGui.button(text);
+        ImGui.setCursorPos(oldPos.x, oldPos.y);
+        return result;
+    }
+
+    public static boolean CenteredText(String text, float yOff) { // only for fullscreen windows
+        // do the same as ImGui::Text but center it
+        float windowWidth = Window.getWidth();
+        ImVec2 dst = new ImVec2();
+        ImGui.calcTextSize(dst, text);
+        float textWidth = dst.x;
+        float textX = (windowWidth - textWidth) / 2;
+        // center x and y, then add yOff
+        ImVec2 oldPos = new ImVec2();
+        ImGui.getCursorPos(oldPos);
+        ImGui.setCursorPos(textX, Window.getHeight() / 2.0f + yOff);
+        ImGui.text(text);
+        ImGui.setCursorPos(oldPos.x, oldPos.y);
+        return true;
+    }
+
+    public static ImVec2 lastPos = new ImVec2();
+
+    public static void CenterBegin(int w, int h, int xoff, int yoff) { // only one at a time
+        // stores the cursor position in lastPos
+        // sets the cursor to the center of the screen (for an object of w,h) but offset by xoff and yoff
+        ImGui.getCursorPos(lastPos);
+        ImGui.setCursorPos(Window.getWidth() / 2.0f - w / 2.0f + xoff, Window.getHeight() / 2.0f - h / 2.0f + yoff);
+    }
+
+    public static void CenterEnd() {
+        // sets the cursor to the position stored in lastPos
+        ImGui.setCursorPos(lastPos.x, lastPos.y);
+    }
+
     public void initImGui() {
         // IMPORTANT!!
         // This line is critical for Dear ImGui to work.
@@ -25,7 +79,7 @@ public class ImGuiLayer {
         // Initialize ImGuiIO config
         final ImGuiIO io = ImGui.getIO();
 
-        io.setIniFilename(null); // We don't want to save .ini file
+        io.setIniFilename("assets/imgui.ini"); // We don't want to save .ini file
         io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard); // Navigation with keyboard
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
@@ -150,16 +204,68 @@ public class ImGuiLayer {
         // Use freetype instead of stb_truetype to build a fonts texture
         ImGuiFreeType.buildFontAtlas(fontAtlas, ImGuiFreeType.RasterizerFlags.LightHinting);
 
+        // Style configuration
+
+        final ImGuiStyle style = ImGui.getStyle();
+        // found here: https://www.unknowncheats.me/forum/c-and-c-/189635-imgui-style-settings.html
+        style.setWindowPadding(15, 15);
+        style.setWindowRounding(5);
+        style.setFramePadding(5, 5);
+        style.setFrameRounding(4);
+        style.setItemSpacing(12, 8);
+        style.setItemInnerSpacing(8, 6);
+        style.setIndentSpacing(25);
+        style.setScrollbarSize(15);
+        style.setScrollbarRounding(9);
+        style.setGrabMinSize(5);
+        style.setGrabRounding(3);
+
+        style.setColor(ImGuiCol.Text, 0.80f, 0.80f, 0.83f, 1.00f);
+        style.setColor(ImGuiCol.TextDisabled, 0.24f, 0.23f, 0.29f, 1.00f);
+        style.setColor(ImGuiCol.WindowBg, 0.06f, 0.05f, 0.07f, 1.00f);
+        style.setColor(ImGuiCol.ChildBg, 0.07f, 0.07f, 0.09f, 1.00f);
+        style.setColor(ImGuiCol.PopupBg, 0.07f, 0.07f, 0.09f, 1.00f);
+        style.setColor(ImGuiCol.Border, 0.80f, 0.80f, 0.83f, 0.88f);
+        style.setColor(ImGuiCol.BorderShadow, 0.92f, 0.91f, 0.88f, 0.00f);
+        style.setColor(ImGuiCol.FrameBg, 0.10f, 0.09f, 0.12f, 1.00f);
+        style.setColor(ImGuiCol.FrameBgHovered, 0.24f, 0.23f, 0.29f, 1.00f);
+        style.setColor(ImGuiCol.FrameBgActive, 0.56f, 0.56f, 0.58f, 1.00f);
+        style.setColor(ImGuiCol.TitleBg, 0.10f, 0.09f, 0.12f, 1.00f);
+        style.setColor(ImGuiCol.TitleBgCollapsed, 1.00f, 0.98f, 0.95f, 0.75f);
+        style.setColor(ImGuiCol.TitleBgActive, 0.07f, 0.07f, 0.09f, 1.00f);
+        style.setColor(ImGuiCol.MenuBarBg, 0.10f, 0.09f, 0.12f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarBg, 0.10f, 0.09f, 0.12f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarGrab, 0.80f, 0.80f, 0.83f, 0.31f);
+        style.setColor(ImGuiCol.ScrollbarGrabHovered, 0.56f, 0.56f, 0.58f, 1.00f);
+        style.setColor(ImGuiCol.ScrollbarGrabActive, 0.06f, 0.05f, 0.07f, 1.00f);
+        style.setColor(ImGuiCol.CheckMark, 0.80f, 0.80f, 0.83f, 0.31f);
+        style.setColor(ImGuiCol.SliderGrab, 0.80f, 0.80f, 0.83f, 0.31f);
+        style.setColor(ImGuiCol.SliderGrabActive, 0.06f, 0.05f, 0.07f, 1.00f);
+        style.setColor(ImGuiCol.Button, 0.10f, 0.09f, 0.12f, 1.00f);
+        style.setColor(ImGuiCol.ButtonHovered, 0.24f, 0.23f, 0.29f, 1.00f);
+        style.setColor(ImGuiCol.ButtonActive, 0.56f, 0.56f, 0.58f, 1.00f);
+        style.setColor(ImGuiCol.Header, 0.10f, 0.09f, 0.12f, 1.00f);
+        style.setColor(ImGuiCol.HeaderHovered, 0.56f, 0.56f, 0.58f, 1.00f);
+        style.setColor(ImGuiCol.HeaderActive, 0.06f, 0.05f, 0.07f, 1.00f);
+        style.setColor(ImGuiCol.ResizeGrip, 0.00f, 0.00f, 0.00f, 0.00f);
+        style.setColor(ImGuiCol.ResizeGripHovered, 0.56f, 0.56f, 0.58f, 1.00f);
+        style.setColor(ImGuiCol.ResizeGripActive, 0.06f, 0.05f, 0.07f, 1.00f);
+        style.setColor(ImGuiCol.PlotLines, 0.40f, 0.39f, 0.38f, 0.63f);
+        style.setColor(ImGuiCol.PlotLinesHovered, 0.25f, 1.00f, 0.00f, 1.00f);
+        style.setColor(ImGuiCol.PlotHistogram, 0.40f, 0.39f, 0.38f, 0.63f);
+        style.setColor(ImGuiCol.PlotHistogramHovered, 0.25f, 1.00f, 0.00f, 1.00f);
+        style.setColor(ImGuiCol.TextSelectedBg, 0.25f, 1.00f, 0.00f, 0.43f);
+
         // Method initializes LWJGL3 renderer.
         // This method SHOULD be called after you've initialized your ImGui configuration (fonts and so on).
         // ImGui context should be created as well.
         imGuiGl3.init("#version 330 core");
     }
 
-    public void update(float dt) {
+    public void update(float dt, Scene scene) {
         startFrame(dt);
         ImGui.newFrame();
-        ImGui.showDemoWindow();
+        scene.imgui();
         ImGui.render();
         endFrame();
     }

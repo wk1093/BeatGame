@@ -56,7 +56,7 @@ public class SpriteRenderer extends Component {
     public void setSprite(Sprite sprite) {
         if (sprite == null) return;
         if (this.sprite == sprite) return;
-        sprite = sprite;
+        this.sprite = sprite;
         isDirty = true;
     }
 
@@ -73,5 +73,9 @@ public class SpriteRenderer extends Component {
 
     public void setClean() {
         isDirty = false;
+    }
+
+    public void dirty() {
+        isDirty = true;
     }
 }

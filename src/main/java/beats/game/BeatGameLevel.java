@@ -1,9 +1,11 @@
 package beats.game;
 
+import beats.ecs.GameObject;
 import beats.util.FileUtils;
 import org.joml.Vector2f;
 import org.json.*;
 import beats.game.BeatType;
+import beats.game.JsonBeat;
 
 import java.util.Vector;
 
@@ -12,6 +14,47 @@ public class BeatGameLevel {
     private String song;
     private String composer;
     private String author;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSong() {
+        return song;
+    }
+
+    public String getComposer() {
+        return composer;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public double getOffsetms() {
+        return offsetms;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public double getBpm() {
+        return bpm;
+    }
+
+    public Vector<JsonBeat> getBeatmap() {
+        return beatmap;
+    }
+
+    public boolean isNoBPM() {
+        return noBPM;
+    }
+
     private int difficulty;
     private double offsetms;
     private double length;
@@ -62,80 +105,5 @@ public class BeatGameLevel {
 
     }
 
-}
-
-class JsonBeat {
-    private BeatType type;
-    // u/d/l/r/c
-    private double timems;
-    private Vector2f pos; // this position is not in pixel coords, it is from 0-500 on x and y, starting on the bottom-left
-    private double reactionms;
-
-    // set
-    private double bpm;
-
-
-    public BeatType getType() {
-        return type;
-    }
-
-    public void setType(BeatType type) {
-        this.type = type;
-    }
-
-    public double getTimems() { // TODO: Add math to calculate timems in beat mode
-        return timems;
-    }
-
-    public void setTimems(double timems) {
-        this.timems = timems;
-    }
-
-    public Vector2f getPos() {
-        return pos;
-    }
-
-    public void setPos(Vector2f pos) {
-        this.pos = pos;
-    }
-
-    public double getReactionms() {
-        return reactionms;
-    }
-
-    public void setReactionms(double reactionms) {
-        this.reactionms = reactionms;
-    }
-
-    public double getBpm() {
-        return bpm;
-    }
-
-    public void setBpm(double bpm) {
-        this.bpm = bpm;
-    }
-
-    public JsonBeat(JSONObject json) {
-        switch(json.getString("type")) {
-            case "up": type = BeatType.up; break;
-            case "down": type = BeatType.down; break;
-            case "left": type = BeatType.left; break;
-            case "right": type = BeatType.right; break;
-            case "click": type = BeatType.click; break;
-            case "set": type = BeatType.set; break;
-            default:
-                throw new IllegalStateException("Invalid Beat Type");
-        }
-
-        timems = json.getDouble("time");
-        if (type == BeatType.set) {
-            bpm = json.getDouble("bpm");
-        } else {
-            double x = json.getDouble("x");
-            double y = json.getDouble("y");
-            pos = new Vector2f((float) x, (float)y);
-            try { reactionms = json.getDouble("reaction"); } catch (JSONException e) { reactionms = 0.5; }
-        }
-    }
 }
 

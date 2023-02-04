@@ -52,4 +52,10 @@ public class Renderer {
             batch.render();
         }
     }
+
+    public void remove(GameObject countdown) {
+        for (RenderBatch batch : batches) {
+            batch.remove(countdown);
+        }
+    }
 }

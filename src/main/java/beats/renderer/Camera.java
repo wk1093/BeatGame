@@ -1,5 +1,6 @@
 package beats.renderer;
 
+import beats.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -16,7 +17,8 @@ public class Camera {
     }
 
     public void adjustProjection() {
-        projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.001f, 100.0f);
+        //projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f, 0.001f, 100.0f);
+        projectionMatrix.ortho(0.0f, Window.getWidth(), 0.0f, Window.getHeight(), 0.001f, 100.0f);
     }
 
     public Matrix4f getViewMatrix() {

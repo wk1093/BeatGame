@@ -39,10 +39,19 @@ public abstract class Scene {
         }
     }
 
+    protected void removeGameObjectFromScene(GameObject countdown) {
+        this.gameObjects.remove(countdown);
+        this.renderer.remove(countdown);
+    }
+
     public abstract void update(float dt);
 
     public Camera camera() {
         return camera;
+    }
+
+    public void imgui() {
+
     }
 
 }

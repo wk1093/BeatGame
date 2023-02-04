@@ -6,7 +6,6 @@ a rhythm game
 32x32
 layout:
 ```
-UP LEFT RIGHT DOWN CLICK CIRCLE
-32*6 = 192
-192x32
+UP LEFT RIGHT DOWN CLICK CIRCLE 3 2 1
+32*9 = 288
 ```
