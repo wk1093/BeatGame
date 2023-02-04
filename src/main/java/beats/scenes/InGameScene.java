@@ -9,11 +9,13 @@ import beats.renderer.Camera;
 import beats.renderer.Sprite;
 import beats.renderer.SpriteSheet;
 import beats.util.AssetPool;
+import beats.util.Time;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class InGameScene extends Scene {
 
+    private GameObject colorObject;
 
 
     public InGameScene() {
@@ -23,7 +25,7 @@ public class InGameScene extends Scene {
     @Override
     public void init() {
         loadResources();
-        this.camera = new Camera(new Vector2f());
+        this.camera = new Camera(new Vector2f(-250, 0));
 
         SpriteSheet sprites = AssetPool.getSpriteSheet("assets/images/spritesheet.png");
         assert sprites != null;
@@ -35,6 +37,10 @@ public class InGameScene extends Scene {
         GameObject obj2 = new GameObject("obj2", new Transform(new Vector2f(300, 100), new Vector2f(200, 200)));
         obj2.addComponent(new SpriteRenderer(sprites.getSprite(3)));
         this.gameObjects.add(obj2);
+
+        colorObject = new GameObject("color", new Transform(new Vector2f(0, 0), new Vector2f(100, 100)));
+        colorObject.addComponent(new SpriteRenderer(new Vector4f(1, 0, 0, 1)));
+        this.gameObjects.add(colorObject);
     }
 
     private void loadResources() {
@@ -45,7 +51,7 @@ public class InGameScene extends Scene {
 
 
     public void update(float dt) {
-        System.out.print("\rFPS:"+(1.0f/dt));
+        colorObject.transform.position.y += 100 * dt;
 
         for (GameObject go : this.gameObjects) {
             go.update(dt);

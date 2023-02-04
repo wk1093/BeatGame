@@ -77,8 +77,19 @@ public class RenderBatch {
     }
 
     public void render() {
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        boolean rebufferData = false;
+        for (int i = 0; i < numSprites; i++) {
+            SpriteRenderer spr = sprites[i];
+            if (spr.isDirty()) {
+                loadVertexProperties(i);
+                spr.setClean();
+                rebufferData = true;
+            }
+        }
+        if (rebufferData) {
+            glBindBuffer(GL_ARRAY_BUFFER, vboID);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+        }
 
         shader.use();
         shader.uploadMat4f("uProjection", Window.getScene().camera().getProjectionMatrix());
@@ -121,7 +132,6 @@ public class RenderBatch {
                 }
             }
         }
-        System.out.println(texId);
 
 
         float xAdd = 1.0f;
@@ -142,6 +152,7 @@ public class RenderBatch {
             vertices[off+3] = color.y;
             vertices[off+4] = color.z;
             vertices[off+5] = color.w;
+            //System.out.println(color.y);
 
             vertices[off+6] = texCoords[i].x;
             vertices[off+7] = texCoords[i].y;
