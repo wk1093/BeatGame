@@ -7,5 +7,4 @@ a rhythm game
 layout:
 ```
 UP LEFT RIGHT DOWN CLICK CIRCLE 3 2 1
-32*9 = 288
 ```
